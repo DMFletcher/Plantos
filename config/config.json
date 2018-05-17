@@ -3,6 +3,7 @@
     "username": "root",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "password": "Chronos02",
 =======
     "password": "password",
@@ -10,6 +11,9 @@
 =======
     "password": "Root",
 >>>>>>> f6311488e314f254aec0a985bdfe91bcc6624df2
+=======
+    "password": "password",
+>>>>>>> a374ce6a11831d88e75599c428c906fd45189ef5
     "database": "hngplants_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
