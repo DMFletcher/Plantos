@@ -33,12 +33,12 @@ require("./routes/api-routes.js")(app);
 //this functionality is in config
 var mysql = require("mysql");
 
-var connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Chronos02",
-    database: "hngplants_db"
-});
+// var connection = mysql.createConnection({
+//     host: "localhost",
+//     user: "root",
+//     password: "Chronos02",
+//     database: "hngplants_db"
+// });
 
 connection.connect(function (err) {
 if (err) throw err;

@@ -2,10 +2,14 @@
   "development": {
     "username": "root",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "password": "Chronos02",
 =======
     "password": "password",
 >>>>>>> 94d65d323d526ec45575564164addc03b9991111
+=======
+    "password": "Root",
+>>>>>>> f6311488e314f254aec0a985bdfe91bcc6624df2
     "database": "hngplants_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
