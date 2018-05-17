@@ -12,26 +12,29 @@ $(document).ready(function() {
     window.location.href="/addPlant"
     //if logged in, take to page
     //else take to sign-up page
-  });
+  })
 
   //if user clicks "watered" button, a happy message pops up
   // Button trigger for modal on myPlants page
-  $(document).on("click", "#happyMsgModal", function () {});
+  $(document).on("click", ".feelGoodMsg", function () {
+
+  });
 
   //data-toggle="modal" data-target="#exampleModal">
 
-  //this is junk, delete later
+
+  
   $(document).on("click", ".waterBtn", function (e) {
-    $(this).removeClass("figuringCycle");
-    $(this).addClass("feelGoodMsg");//working
-    $(this).attr("data-target", "#happyMsgModal");
-    $(this).attr("data-toggle", "modal");
+    console.log(this, this.id);
+    var button=this.id;
+    $("a").removeClass("figuringCycle");
+    $(this).addClass("feelGoodMsg");
+    // button.attr("id", "feelGoodMsg");
+    // button.text("Watered");
   });
 
   //if user clicks "water now" button, it changes to "watered"
   $(document).on("click", ".waterNowBtn", function () {
-    $(this).removeClass("waterNowBtn");
-    $(this).addClass("");
     // var button=??;
     // console.log(this.id);
     // button.removeAtt("id", "feelGoodMsg")
@@ -58,10 +61,20 @@ $(document).ready(function() {
       plant_common_name: $("#commonName").val().trim(),
       plant_water_text: $("#wateringNeedsText").val().trim(),
       sun_placement: $("#sunNeeds").val(),
-      pet_friendly: $("#petFriendly").val(),
-      plant_water_int: ($("#wateringNeedsInt").val().trim()) || null,
-      plant_scientific_name: $("#scientificName").val().trim() || null
+      pet_friendly: $("#petFriendly").val()
     };
+
+    //add to newPlant object if these optional values are included on the form
+    if ($("#wateringNeedsInt").val().trim() !== ""){
+      newPlant={
+        plant_water_int: $("#wateringNeedsInt").val().trim(),
+      }
+    }
+    if ($("#scientificName").val().trim() !== ""){
+      newPlant={
+        plant_scentific_name: $("#scientificName").val().trim(),
+      }
+    }
 
     $.ajax("/api/plants", {
       type:"POST",
@@ -71,6 +84,40 @@ $(document).ready(function() {
         window.location.href = "/myPlants";
       }
     )
-  })
+  });
+
+$("#signupBtn").on("click", function(e){
+    //get form data from add a plant
+    //create card with pic, name, link to modal
+    e.preventDefault();
+
+    console.log($("#email-input").val().trim());
+
+    var newUser = {
+      email: $("#email-input").val().trim(),
+      password: $("#password-input").val().trim()
+    };
+
+    //add to newPlant object if these optional values are included on the form
+    if ($("#email-input").val().trim() !== ""){
+      newPlant={
+        plant_water_int: $("#wateringNeedsInt").val().trim(),
+      }
+    }
+    if ($("#scientificName").val().trim() !== ""){
+      newPlant={
+        plant_scentific_name: $("#scientificName").val().trim(),
+      }
+    }
+
+    $.ajax("/api/plants", {
+      type:"POST",
+      data:newPlant
+    }).then(
+      function(){
+        window.location.href = "/myPlants";
+      }
+    )
+  });
 
 });

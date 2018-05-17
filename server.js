@@ -3,11 +3,11 @@ var bodyParser = require("body-parser");
 //session is necessary for passport to work
 var session = require('express-session');
 // Requiring passport as we've configured it
-var passport = require("./config/passport");
-var env = require('dotenv').load()
-
+var passport = require("passport");
+var env = require('dotenv').load();
+var models = require('./models');
 //load passport strategies
-require('./config/passport.js');;
+require('./config/passport.js')(passport, models.user);;
 
 var app = express();
 var PORT = process.env.PORT || 8080;
@@ -19,6 +19,16 @@ app.use(express.static("public"));
 
 var db = require("./models");
 
+// For Passport
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+})); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+ 
+ 
 var exphbs = require("express-handlebars");
 app.set('views', 'views')//from passport
 app.engine("handlebars", exphbs({
@@ -30,6 +40,27 @@ app.set("view engine", "handlebars");
 require("./routes/html-routes.js")(app);
 require("./routes/api-routes.js")(app);
 
+
+app.get('/', function(req, res) {
+    res.send('Welcome to Passport with Sequelize');
+});
+//Models
+var models = require("./models");
+//Routes
+var authRoute = require('./routes/auth.js')(app);
+//load passport strategies
+require('./config/passport.js')(passport, models.user);
+//Sync Database
+models.sequelize.sync().then(function() {
+    console.log('Nice! Database looks fine')
+}).catch(function(err) {
+    console.log(err, "Something went wrong with the Database Update!")
+});
+app.listen(8080, function(err) {
+    if (!err)
+        console.log("Site is live");
+    else console.log(err)
+});
 //this functionality is in config
 //var mysql = require("mysql");
 
