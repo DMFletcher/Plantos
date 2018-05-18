@@ -9,11 +9,9 @@ var sequelize = new Sequelize(config.database, config.username, config.password,
 var db = {};
  
 if (config.use_env_variable) {
-    var sequelize = new Sequelize(process.env[config.use_env_variable]
-    , config);
+    var sequelize = new Sequelize(process.env[config.use_env_variable], config);
     } else {
-    var sequelize = new Sequelize(config.database, config.username, 
-    config.password, config);
+    var sequelize = new Sequelize(config.database, config.username, config.password, config);
     }
   
 fs
@@ -27,7 +25,7 @@ fs
     });
  
 Object.keys(db).forEach(function(modelName) {
-    if ("associate" in db[modelName]) {
+    if (db[modelName].associate) {
         db[modelName].associate(db);
     }
 });
