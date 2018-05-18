@@ -5,7 +5,7 @@ var bcrypt = require("bcrypt-nodejs");
 module.exports = function (sequelize, DataTypes) {
 
   var User = sequelize.define("User", {
-        //ID autoset by sequelize
+    //ID autoset by sequelize
     // //set id as primary key
     // id: {
     //   autoIncrement: true,
@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING,
       allowNull: false
-    }, 
+    },
     //created an activity status
     status: {
       type: Sequelize.ENUM('active', 'inactive'),
@@ -44,28 +44,38 @@ module.exports = function (sequelize, DataTypes) {
       },
       through: "plantUser"
     });
+    User.associate = function (models) {
+      // Associating User with Plants
+      User.belongsToMany(models.Plant, {
+        foreignKey: {
+          name: 'plantID',
+          allowNull: true
+        },
+        through: "plantUser"
+      });
+      User.hasMany(models.lastWatered)
+    };
+    return User;
+
+    // Creating a custom method for our User model. This will check if an unhashed password entered by the user can be compared to the hashed password stored in our database
+    User.prototype.validPassword = function (password) {
+      return bcrypt.compareSync(password, this.password);
+
+    };
+    // Hooks are automatic methods that run during various phases of the User Model lifecycle
+    // In this case, before a User is created, we will automatically hash their password
+    User.hook("beforeCreate", function (user) {
+      user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
+    });
+    return User;
   };
-  return User;
-
-  // Creating a custom method for our User model. This will check if an unhashed password entered by the user can be compared to the hashed password stored in our database
-  User.prototype.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.password);
-
-  };
-  // Hooks are automatic methods that run during various phases of the User Model lifecycle
-  // In this case, before a User is created, we will automatically hash their password
-  User.hook("beforeCreate", function (user) {
-    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
-  });
-  return User;
-};
 
 
 
 
 
 
-
+}
 
 
   // User.associate = function(models) {
