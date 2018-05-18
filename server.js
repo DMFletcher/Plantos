@@ -1,4 +1,5 @@
 var express = require("express");
+var app = express();
 var bodyParser = require("body-parser");
 //session is necessary for passport to work
 var session = require('express-session');
@@ -6,12 +7,11 @@ var session = require('express-session');
 var passport = require("passport");
 var env = require('dotenv').load();
 var models = require('./models');
-//load passport strategies
-require('./config/passport.js')(passport, models.user);;
 
-var app = express();
+
 var PORT = process.env.PORT || 8080;
 
+//for bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -39,28 +39,24 @@ app.set("view engine", "handlebars");
 // Requiring our routes
 require("./routes/html-routes.js")(app);
 require("./routes/api-routes.js")(app);
-
+require("./routes/auth.js");
 
 app.get('/', function(req, res) {
-    res.send('Welcome to Passport with Sequelize');
+    res.send('Welcome to the Plantos Water Scheduler');
 });
-//Models
-var models = require("./models");
+// //Models
+// var models = require("./models");
 //Routes
-var authRoute = require('./routes/auth.js')(app);
+var authRoute = require('./routes/auth.js')(app, passport);
 //load passport strategies
 require('./config/passport.js')(passport, models.user);
-//Sync Database
-models.sequelize.sync().then(function() {
-    console.log('Nice! Database looks fine')
-}).catch(function(err) {
-    console.log(err, "Something went wrong with the Database Update!")
-});
-app.listen(8080, function(err) {
-    if (!err)
-        console.log("Site is live");
-    else console.log(err)
-});
+// //Sync Database
+// models.sequelize.sync().then(function() {
+//     console.log('Nice! Database looks fine')
+// }).catch(function(err) {
+//     console.log(err, "Something went wrong with the Database Update!")
+// });
+
 //this functionality is in config
 //var mysql = require("mysql");
 
@@ -81,4 +77,9 @@ db.sequelize.sync({ force: false }).then(function () {
     app.listen(PORT, function () {
         console.log("App listening on PORT" + PORT);
     })
+});
+app.listen(8080, function(err) {
+    if (!err)
+        console.log("Site is live");
+    else console.log(err)
 });

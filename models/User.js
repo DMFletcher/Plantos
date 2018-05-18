@@ -1,42 +1,78 @@
-module.exports = function(sequelize, Sequelize) {
- 
-  var User = sequelize.define('user', {
+// Requiring bcrypt for password hashing. Using the bcrypt-nodejs version as the regular bcrypt module
+// sometimes causes errors on Windows machines
+var bcrypt = require("bcrypt-nodejs");
+// Creating our User model
+module.exports = function (sequelize, DataTypes) {
 
-
-      email: {
-          type: Sequelize.STRING,
-          validate: {
-              isEmail: true
-          }
-      },
-
-      password: {
-          type: Sequelize.STRING,
-          allowNull: false
-      },
-
-      last_login: {
-          type: Sequelize.DATE
-      },
-
-      status: {
-          type: Sequelize.ENUM('active', 'inactive'),
-          defaultValue: 'active'
+  var User = sequelize.define("User", {
+        //ID autoset by sequelize
+    // //set id as primary key
+    // id: {
+    //   autoIncrement: true,
+    //   primaryKey: true,
+    //   type: Sequelize.INTEGER
+    // },
+    // Giving the User model a name of type STRING
+    // TODO: greet user with name
+    // name: {
+    //   type: DataTypes.STRING
+    // },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true
       }
-
-
+    },
+    // The password cannot be null
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }, 
+    //created an activity status
+    status: {
+      type: Sequelize.ENUM('active', 'inactive'),
+      defaultValue: 'active'
+    }
   });
-
   User.associate = function (models) {
-      // Associating User with Plants
-      User.belongsToMany(models.Plant, {
-        foreignKey: {
-          allowNull: false
-        },
-        through: "plantUser"
-      });
-    };
-
+    // Associating User with Plants
+    User.belongsToMany(models.Plant, {
+      foreignKey: {
+        allowNull: false
+      },
+      through: "plantUser"
+    });
+  };
   return User;
 
-}
+  // Creating a custom method for our User model. This will check if an unhashed password entered by the user can be compared to the hashed password stored in our database
+  User.prototype.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+
+  };
+  // Hooks are automatic methods that run during various phases of the User Model lifecycle
+  // In this case, before a User is created, we will automatically hash their password
+  User.hook("beforeCreate", function (user) {
+    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
+  });
+  return User;
+};
+
+
+
+
+
+
+
+
+
+  // User.associate = function(models) {
+  //   // Associating User with Plants
+  //   User.hasMany(models.userPlants, {
+  //     foreignKey: {
+  //       allowNull: false
+  //     }
+  //   });
+  // }
