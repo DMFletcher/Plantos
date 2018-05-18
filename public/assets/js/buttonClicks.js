@@ -2,17 +2,12 @@
 
 $(document).ready(function() {
  
-  $("#scheduleBtn").on("click", function(){
-    window.location.href="../../../views/pages/schedule.handlebars";
-  });
-
   //addPlantBtn
-  $("#addPlantBtn").on("click", function(e){
-    console.log("here");
-    e.preventDefault();
+  $("#addPlantBtn").on("click", function(){
     window.location.href="/addPlant"
     //if logged in, take to page
     //else take to sign-up page
+<<<<<<< HEAD
   })
 
   //if user clicks "watered" button, a happy message pops up; the btn trigger for this is on myPlants page
@@ -91,6 +86,12 @@ $(document).ready(function() {
   $(document).on("click", "changeCycleBtn", function () {
     //modal "You have x days left. Option1: Do you want to water it now and restart the cycle? Option2: Delete this plant Option3: Do you want to recalculate the water cycle? Or cancel?" 
   
+=======
+  });
+  //cancelAddPlantBtn
+  $("#cancelAddPlantBtn").on("click", function(){
+    window.location.href="/myPlants"
+>>>>>>> a8ae2ec7ece01ed7640cc1b4a356fc380d67af47
   });
 
   $("#submitPlant").on("click", function(e){

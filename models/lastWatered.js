@@ -20,10 +20,7 @@ module.exports = function (sequelize, DataTypes) {
         // console.log(models.userPlants);
         console.log(models.Plant);
 
-
-
         lastWatered.belongsTo(models.User, { through: models.Plant });
-
         lastWatered.belongsTo(models.Plant);
     };
 
