@@ -7,7 +7,21 @@ $(document).ready(function() {
     window.location.href="/addPlant"
     //if logged in, take to page
     //else take to sign-up page
-    
+  });
+  //cancelAddPlantBtn
+  $("#cancelAddPlantBtn").on("click", function(e){
+    e.preventDefault();
+    window.location.href="/myPlants"
+  });
+
+  $("#loginPage").on("click", function(e){
+    e.preventDefault();
+    window.location.href="/login"
+  });
+
+  $("#signUpBtn").on("click", function(e){
+    e.preventDefault();
+    window.location.href="/signup"
   });
 
   $("#submitPlant").on("click", function(e){
